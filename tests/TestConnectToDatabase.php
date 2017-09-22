@@ -5,14 +5,23 @@ require_once "ConnectTodatabase.php";
 
 class TestConnectToDatabase extends PHPUnit_Framework_TestCase 
 {
-    public function testConnectDatabase()
+    public function testCreatingNewFile()
     {
-        $connect = new ConnectToDatabase();
+        $operation = new OperationsOnFiles();
 
-        $IfConnectTrue=$connect->ConnectWithDatabase();
+        $ResourceFile=$operation->CreateNewFile("test.txt");
 
-        var_dump($IfConnectTrue);
+        $this->assertEquals($ResourceFile,$ResourceFile);
+    }
 
-        $this->assertTrue($IfConnectTrue);
+    public function testSavingActivationsToFile()
+    {
+        $operation = new OperationsOnFiles();
+
+        $ResourceFile=$operation->CreateNewFile("test.txt");
+
+        $SavingData=$operation->SaveActivationsToCreatedFile($ResourceFile,"testowedane");
+
+        $this->assertTrue($SavingData);
     }
 }

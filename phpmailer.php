@@ -21,11 +21,43 @@
 
 	$mail->isHTML(true);
 
-	$mail->Body = '<h3>Zaznaczone aktywacje w bazie danych</h3><br><div style="font-size:20px;">Aktywacja 1: '.$active[1]."<br>Aktywacja 2: ".$active[2]."<br>Aktywacja 3: ".$active[3]."<br>Aktywacja 4: ".$active[4]."<br>Aktywacja 5: ".$active[5]."<br>Aktywacja 6: ".$active[6]."<br>Aktywacja 7: ".$active[7]."<br>Aktywacja 8: ".$active[8]."<br>Aktywacja 9: ".$active[9]."<br>Aktywacja 10: ".$active[10]."</div>";
+	$mail->Body = 'Hello<br>Please send license uuprogs to<br>Registration form:<br>----------------------------<br>Salutation (pan/pani) = <br>
+											Last Name (nazwisko) =<br>
+											First Name (imie) =<br>
+											Company (firma) =<br>
+											Street (ulica) =<br>
+											ZIP (kod pocztowy) =<br>
+											City (miasto) =<br>
+											FullCity (pelna nazwa miasta) =<br>
+											Country (kraj) =<br>
+											State / Province(wojewodztwo) =<br>
+											Phone (telefon) =<br>
+											Fax (fax) =<br>
+											E-Mail (dzialajacy e-mail) =<br>
+											Registration name(nick-nazwa firmy) =<br>
+											----------------------------<br>Sale Date (data zakupu) =<br>
+											Paragon/Faktura NR (numer paragonu/FV)= Paragon/Faktura NR (Paragon/Invoice)<br>
+											----------------------------<br>Thank you
+											<br><br>
+
+											Pozdrawiam serdecznie
+											<br>
+											Tomasz  Sadowski
+											<br>
+											TOMSAD
+											<br>
+											tel 694 56 29 73
+											<br>
+
+											UWAGA!! Polecamy szkolenia "Alfabet programatorów"
+											<br><a href="http://www.programatory.com/index.php?p309,szkolenie-alfabet-programatorow" target="_blank">http://www.programatory.com/index.php?p309,szkolenie-alfabet-programatorow</a><br>
+											<h3>Zaznaczone aktywacje w bazie danych w pliku</h3>';
+
+	$mail->addAttachment($file, 'Plik z aktywacjami');
 
 	$mail->setFrom('sawekk982@gmail.com', 'Zaznaczone aktywacje');
 
-	$mail->addAddress($this->_email);
+	$mail->addAddress($email);
 
 	if ($mail->send())
 	    $_SESSION['message_ok']="Wysłano wiadomość!";
