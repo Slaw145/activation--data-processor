@@ -20,9 +20,18 @@ if(isset($_POST['email']))
 	}
 	else
 	{
+		$ifemail=$connect->SelectTableAktywacjeWhereEmailEaqul();
+
 		$valueactivationtodatabase=$connect->SaveActivationsToTable();
 
-		$connect->UpdateTableAktywacjeWhereEmailEaqul($valueactivationtodatabase);
+		if ($ifemail > 0) 
+		{
+			$connect->UpdateTableAktywacjeWhereEmailEaqul($valueactivationtodatabase);
+		}
+		else
+		{
+			$connect->InsertEmailToTableAktywacje($valueactivationtodatabase);
+		}
 	}
 
 	$operation= new OperationsOnFiles();
@@ -39,7 +48,11 @@ if(isset($_POST['email']))
 
 	$file=$operation->SaveActivationsToCreatedFile($newFile,$data);
 
-	$sendemail->SendEmail($email,$namefile);
+	$sendemail->SendEmail($email,$namefile," ");
+
+	//$InformationAboutUser=$connect->GetInformationAboutUser();
+
+	//$sendemail->SendEmail($email,"nothing",$InformationAboutUser);
 }
 
 ?>

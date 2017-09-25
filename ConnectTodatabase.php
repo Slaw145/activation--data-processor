@@ -53,19 +53,73 @@ class ConnectToDatabase
 			return false;
 		}
 	}
+
+	public function SelectTableAktywacjeWhereEmailEaqul()
+	{
+		$sqlget="SELECT * FROM Aktywacje WHERE email='$this->_email'";
+
+		$rezult=@$this->polaczenie->query($sqlget);
+
+		return $rezult->num_rows;
+	}
+
+	public function InsertEmailToTableAktywacje($activetodatabase)
+	{
+		$sqlget="INSERT INTO Aktywacje (id,numerseryjny, danezprocesora, imieinazwiskoadreszamieszkania,aktywacja1,aktywacja2,aktywacja3,aktywacja4,aktywacja5,aktywacja6,aktywacja7,aktywacja8,aktywacja9,aktywacja10, email) VALUES (NULL, '$this->_numseries', '$this->_datamikropro',NULL,'$activetodatabase[1]','$activetodatabase[2]','$activetodatabase[3]','$activetodatabase[4]','$activetodatabase[5]','$activetodatabase[6]','$activetodatabase[7]','$activetodatabase[8]','$activetodatabase[9]','$activetodatabase[10]','$this->_email')";
+
+		if(@$this->polaczenie->query($sqlget))
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	public function GetInformationAboutUser()
+	{
+		$imgCheck='<img src="slawe.ayz.pl/Aktywacje/img/check.gif" style="width:25px; height:25px;" alt="">';
+	 	$imgUncheck='<img src="slawe.ayz.pl/Aktywacje/img/uncheck.gif" style="width:25px; height:20px;" alt="">';
+
+		$informationaboutuser=$this->SelectTableAktywacjeWhereEmailEaqul();
+
+		if ($informationaboutuser > 0) 
+		{
+			$wiersz=@$this->polaczenie->query("SELECT * FROM Aktywacje WHERE email='$this->_email'")->fetch_assoc();
+			$numerseryjny=$wiersz['numerseryjny'];
+			$danezprocesora=$wiersz['danezprocesora'];
+			$imieinazwiskoadreszamieszkania=$wiersz['imieinazwiskoadreszamieszkania'];
+
+			for($i=1;$i<=10;$i++)
+			{
+				$active[$i] = $wiersz['aktywacja'.$i];
+
+				if($active[$i]==1)
+				{
+					$active[$i] = $imgCheck;
+				}
+				else if($active[$i]!=1)
+				{
+					$active[$i] = $imgUncheck;
+				}
+			}
+
+			$active[11]=$numerseryjny;
+			$active[12]=$danezprocesora;
+			$active[13]=$imieinazwiskoadreszamieszkania;
+
+			return $active;
+		}
+	}
 }
 
 class Emails{
 
-	private $imgCheck='<img src="slawe.ayz.pl/Aktywacje/img/check.gif" style="width:25px; height:25px;" alt="">';
-	private $imgUncheck='<img src="slawe.ayz.pl/Aktywacje/img/uncheck.gif" style="width:25px; height:20px;" alt="">';
-
-	public function SendEmail($email,$file)
+	public function SendEmail($email,$file,$informationUser)
 	{
-		if($email)
+		if($email!=" " && $file!=" ")
 		{
-			$active=$this->UpdateActivation();
-
 			require 'phpmailer.php';
 
 			return true;
@@ -84,11 +138,11 @@ class Emails{
 
 			if($active[$i]==1)
 			{
-				$active[$i]=$this->imgCheck;
+				$active[$i]="V";
 			}
 			else if($active[$i]!=1)
 			{
-				$active[$i]=$this->imgUncheck;
+				$active[$i]="X";
 			}
 		}
 
@@ -101,7 +155,7 @@ class OperationsOnFiles
 
 	public function CreateNewFile($namefile)
 	{
-		if($namefile)
+		if($namefile!=" ")
 		{
 			return $uchwyt = fopen($namefile, "w");
 		}
@@ -113,7 +167,7 @@ class OperationsOnFiles
 
 	public function SaveActivationsToCreatedFile($resource,$dane)
 	{
-		if($dane && $resource)
+		if($dane && $resource!= 0)
 		{
 			$data=fwrite($resource, $dane); 
 			return true;
